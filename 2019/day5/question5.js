@@ -1,86 +1,55 @@
-const getDataAddress = (memory, index, mode) => {
-  if (mode === 1) {
-    return index;
-  }
-  const address = memory[index];
-  return address;
+const getDataAddress = (memory, index, mode) =>
+  mode === 1 ? index : memory[index];
+
+const getDataIndices = (memory, index, instruction) => {
+  const A = getDataAddress(memory, index + 1, instruction.parm1Mode);
+  const B = getDataAddress(memory, index + 2, instruction.parm2Mode);
+  const res = getDataAddress(memory, index + 3, instruction.parm3Mode);
+  return [A, B, res];
 };
 
 const sum = (memory, index, instruction) => {
-  const A = getDataAddress(memory, index + 1, instruction.parm1Mode);
-  const B = getDataAddress(memory, index + 2, instruction.parm2Mode);
-  const res = getDataAddress(memory, index + 3, instruction.parm3Mode);
-
+  const [A, B, res] = getDataIndices(memory, index, instruction);
   memory[res] = memory[A] + memory[B];
-  return memory;
 };
 
 const mul = (memory, index, instruction) => {
-  const A = getDataAddress(memory, index + 1, instruction.parm1Mode);
-  const B = getDataAddress(memory, index + 2, instruction.parm2Mode);
-  const res = getDataAddress(memory, index + 3, instruction.parm3Mode);
-
+  const [A, B, res] = getDataIndices(memory, index, instruction);
   memory[res] = memory[A] * memory[B];
-  return memory;
 };
 
 const ip = (memory, index) => {
-  const inputVal = parseInt(prompt("Enter Input"));
   const writeAddress = memory[index + 1];
-  memory[writeAddress] = inputVal;
-  return memory;
+  memory[writeAddress] = parseInt(prompt("Enter Input"));
 };
 
 const op = (memory, index, instruction) => {
   const output = getDataAddress(memory, index + 1, instruction.parm1Mode);
   console.log(memory[output]);
-  return memory;
 };
 
 const jmpIfTrue = (memory, index, instruction) => {
-  const A = getDataAddress(memory, index + 1, instruction.parm1Mode);
-  const B = getDataAddress(memory, index + 2, instruction.parm2Mode);
-
-  if(memory[A] > 0) {
-    return memory[B]
-  }
-  return index + 3;
-}
+  const [A, B] = getDataIndices(memory, index, instruction);
+  return memory[A] > 0 ? memory[B] : index + 3;
+};
 
 const jmpIfFalse = (memory, index, instruction) => {
-  const A = getDataAddress(memory, index + 1, instruction.parm1Mode);
-  const B = getDataAddress(memory, index + 2, instruction.parm2Mode);
-
-  if(memory[A] === 0) {
-    return memory[B]
-  }
-  return index + 3;
-}
+  const [A, B] = getDataIndices(memory, index, instruction);
+  return memory[A] === 0 ? memory[B] : index + 3;
+};
 
 const lessThan = (memory, index, instruction) => {
-  const A = getDataAddress(memory, index + 1, instruction.parm1Mode);
-  const B = getDataAddress(memory, index + 2, instruction.parm2Mode);
-  const res = getDataAddress(memory, index + 3, instruction.parm3Mode);
-
+  const [A, B, res] = getDataIndices(memory, index, instruction);
   memory[res] = memory[A] < memory[B] ? 1 : 0;
-  return memory;
 };
-const equalTo = (memory, index, instruction) => {
-  const A = getDataAddress(memory, index + 1, instruction.parm1Mode);
-  const B = getDataAddress(memory, index + 2, instruction.parm2Mode);
-  const res = getDataAddress(memory, index + 3, instruction.parm3Mode);
 
+const equalTo = (memory, index, instruction) => {
+  const [A, B, res] = getDataIndices(memory, index, instruction);
   memory[res] = memory[A] === memory[B] ? 1 : 0;
-  return memory;
 };
 
 const parseInstruction = (instruction) => {
-  const paresedInstruction = {
-    opCode: 0,
-    parm1Mode: 0,
-    parm2Mode: 0,
-    parm3Mode: 0,
-  };
+  const paresedInstruction = {};
   let remainingInstruction = instruction;
   paresedInstruction.opCode = remainingInstruction % 100;
   remainingInstruction = Math.floor(remainingInstruction / 100);
@@ -95,6 +64,7 @@ const main = (memory) => {
   let index = 0;
   while (index < memory.length) {
     const instruction = parseInstruction(memory[index]);
+    // console.log(instruction)
     switch (instruction.opCode) {
       case 1:
         sum(memory, index, instruction);
@@ -128,8 +98,11 @@ const main = (memory) => {
         break;
       case 99:
         console.log("Halted");
+        // console.log(memory);
+
         return memory;
       default:
+        console.log("is corrpeted data", instruction.opCode);
         index += 1;
         break;
     }
@@ -818,9 +791,103 @@ const input = [
   226,
 ];
 
+const smallData = [
+  3,
+  21,
+  1008,
+  21,
+  8,
+  20,
+  1005,
+  20,
+  22,
+  107,
+  8,
+  21,
+  20,
+  1006,
+  20,
+  31,
+  1106,
+  0,
+  36,
+  98,
+  0,
+  0,
+  1002,
+  21,
+  125,
+  20,
+  4,
+  20,
+  1105,
+  1,
+  46,
+  104,
+  999,
+  1105,
+  1,
+  46,
+  1101,
+  1000,
+  1,
+  20,
+  4,
+  20,
+  1105,
+  1,
+  46,
+  98,
+  99,
+];
 
-const example1 = [3,21,1008,21,8,20,1005,20,22,107,8,21,20,1006,20,31,
-1106,0,36,98,0,0,1002,21,125,20,4,20,1105,1,46,104,
-999,1105,1,46,1101,1000,1,20,4,20,1105,1,46,98,99]
-main(input);
-
+const example1 = [
+  3,
+  21,
+  1008,
+  21,
+  8,
+  20,
+  1005,
+  20,
+  22,
+  107,
+  8,
+  21,
+  20,
+  1006,
+  20,
+  31,
+  1106,
+  0,
+  36,
+  98,
+  0,
+  0,
+  1002,
+  21,
+  125,
+  20,
+  4,
+  20,
+  1105,
+  1,
+  46,
+  104,
+  999,
+  1105,
+  1,
+  46,
+  1101,
+  1000,
+  1,
+  20,
+  4,
+  20,
+  1105,
+  1,
+  46,
+  98,
+  99,
+];
+main(smallData);
