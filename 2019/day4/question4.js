@@ -9,12 +9,11 @@ const splitPassword = (password) => {
 };
 
 const isIntergersAscending = (splitedPassword) => {
-  let i = 1;
-  while (i < splitedPassword.length) {
+  let i = 0;
+  while (i++ < splitedPassword.length) {
     if (splitedPassword[i] < splitedPassword[i - 1]) {
       return false;
     }
-    i++;
   }
   return true;
 };
@@ -45,27 +44,6 @@ const isThereConsecutiveNumPair = (splitedPassword) => {
   }
   return false;
 };
-// const isThereConsecutiveNumPair = (splitedPassword) => {
-//   let i = 0;
-//   let consecutiveNumCount = 0;
-//   // let flag = true;
-//   while(i < splitedPassword.length){
-//     if (splitedPassword[i] === splitedPassword[i + 1]) {
-//       // console.log("first if")
-//       consecutiveNumCount++;
-//     } else {
-//       // console.log("else")
-//       consecutiveNumCount++;
-//       const pairCount = consecutiveNumCount / 2;
-//       if (pairCount > 1) {
-//         return false;
-//       }
-//       consecutiveNumCount = 0
-//     }
-//     i++;
-//   }
-//   return true;
-// }
 
 const main = (start, end) => {
   let passwordCounter = 0;
@@ -77,7 +55,6 @@ const main = (start, end) => {
     ) {
       passwordCounter++;
     }
-    // console.log(splittedPassword)
   }
   return passwordCounter;
 };
