@@ -1,4 +1,4 @@
-  const getDataAddress = (memory, index, mode) => {
+const getDataAddress = (memory, index, mode) => {
   if (mode === 1) {
     return index;
   }
@@ -34,6 +34,43 @@ const ip = (memory, index) => {
 const op = (memory, index, instruction) => {
   const output = getDataAddress(memory, index + 1, instruction.parm1Mode);
   console.log(memory[output]);
+  return memory;
+};
+
+const jmpIfTrue = (memory, index, instruction) => {
+  const A = getDataAddress(memory, index + 1, instruction.parm1Mode);
+  const B = getDataAddress(memory, index + 2, instruction.parm2Mode);
+
+  if(memory[A] > 0) {
+    return memory[B]
+  }
+  return index + 3;
+}
+
+const jmpIfFalse = (memory, index, instruction) => {
+  const A = getDataAddress(memory, index + 1, instruction.parm1Mode);
+  const B = getDataAddress(memory, index + 2, instruction.parm2Mode);
+
+  if(memory[A] === 0) {
+    return memory[B]
+  }
+  return index + 3;
+}
+
+const lessThan = (memory, index, instruction) => {
+  const A = getDataAddress(memory, index + 1, instruction.parm1Mode);
+  const B = getDataAddress(memory, index + 2, instruction.parm2Mode);
+  const res = getDataAddress(memory, index + 3, instruction.parm3Mode);
+
+  memory[res] = memory[A] < memory[B] ? 1 : 0;
+  return memory;
+};
+const equalTo = (memory, index, instruction) => {
+  const A = getDataAddress(memory, index + 1, instruction.parm1Mode);
+  const B = getDataAddress(memory, index + 2, instruction.parm2Mode);
+  const res = getDataAddress(memory, index + 3, instruction.parm3Mode);
+
+  memory[res] = memory[A] === memory[B] ? 1 : 0;
   return memory;
 };
 
@@ -74,6 +111,20 @@ const main = (memory) => {
       case 4:
         op(memory, index, instruction);
         index += 2;
+        break;
+      case 5:
+        index = jmpIfTrue(memory, index, instruction);
+        break;
+      case 6:
+        index = jmpIfFalse(memory, index, instruction);
+        break;
+      case 7:
+        lessThan(memory, index, instruction);
+        index += 4;
+        break;
+      case 8:
+        equalTo(memory, index, instruction);
+        index += 4;
         break;
       case 99:
         console.log("Halted");
@@ -767,8 +818,9 @@ const input = [
   226,
 ];
 
-const example2 = [3,1,3,3,1001,0,2,7,4,7,99];
-const outputing = [4,0];
 
+const example1 = [3,21,1008,21,8,20,1005,20,22,107,8,21,20,1006,20,31,
+1106,0,36,98,0,0,1002,21,125,20,4,20,1105,1,46,104,
+999,1105,1,46,1101,1000,1,20,4,20,1105,1,46,98,99]
 main(input);
 
