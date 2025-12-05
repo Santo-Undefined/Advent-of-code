@@ -1,4 +1,4 @@
-import {smallData} from "./input_data.js"
+import {ampMemory, smallData} from "./input_data.js"
 import {actions} from "./instuctions.js"
 
 const parseInstruction = (instruction) => {
@@ -16,4 +16,4 @@ const main = (memory) => {
   return memory;
 }
 
-main(smallData);
+main(ampMemory);
