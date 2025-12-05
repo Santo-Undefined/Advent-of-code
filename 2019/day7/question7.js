@@ -1,4 +1,5 @@
-import { ampMemory, example3, smallData } from "./input_data.js";
+import { permutations } from "jsr:@std/collections";
+import { ampMemory } from "./input_data.js";
 import { actions } from "./instuctions.js";
 
 const parseInstruction = (instruction) => {
@@ -7,38 +8,34 @@ const parseInstruction = (instruction) => {
   return { parm3Mode, parm2Mode, parm1Mode, opCode: opcode.join("") };
 };
 
-const runComputer = (IO, memory) => {
-
-}
+const runComputer = ({ cmd, lastOutput, memory }) => {
+  const acc = { input: [cmd, lastOutput], inputIndex: 0, output: 0 };
+  let index = 0;
+  while (index < memory.length && memory[index] !== 99) {
+    const instruction = parseInstruction(memory[index]);
+    index = actions[instruction.opCode](memory, index, instruction, acc);
+  }
+  return acc.output;
+};
 
 const runAmpCode = (RAM, memory) => {
-  // console.log({ RAM });
   let lastOutput = 0;
   for (const code of RAM) {
     const memoryCopy = memory.slice();
-    const acc = { input: [code, lastOutput], inputIndex: 0, output: 0 };
-    
-    let index = 0;
-    while (index < memoryCopy.length && memoryCopy[index] !== 99) {
-      const instruction = parseInstruction(memoryCopy[index]);
-      index = actions[instruction.opCode](memoryCopy, index, instruction, acc);
-    }
-    // console.log(acc.input, "output", acc.output);
-    lastOutput = acc.output;
+    const resource = { cmd: code, lastOutput: lastOutput, memory: memoryCopy };
+    lastOutput = runComputer(resource);
   }
-  console.log(lastOutput)
+  return lastOutput;
 };
 
-const INPUT = [[0,1,2,3,4]];
-
 const main = (memory) => {
-
-  INPUT.reduce((res, ampCode) => {
+  const inputCombinations = permutations([0, 1, 2, 3, 4]);
+  const bestCombination = inputCombinations.reduce((res, ampCode) => {
     const thrust = runAmpCode(ampCode, memory);
-    console.log(thrust)
     if (thrust > res) return thrust;
     return res;
-  },0);
+  }, 0);
+  console.log(bestCombination);
 };
 
 main(ampMemory);

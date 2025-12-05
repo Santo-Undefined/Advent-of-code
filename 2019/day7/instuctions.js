@@ -23,7 +23,6 @@ const mul = (memory, index, instruction) => {
 const ip = (memory, index, instruction, acc) => {
   const [writeAddress] = getDataIndices(memory, index, instruction, 0);
   memory[writeAddress] = acc.input[acc.inputIndex];
-  // console.log(inputIndex)
   acc.inputIndex = acc.inputIndex + 1;
   return index + 2;
 };
@@ -31,7 +30,6 @@ const ip = (memory, index, instruction, acc) => {
 const op = (memory, index, instruction, acc) => {
   const output = getDataAddress(memory, index + 1, instruction.parm1Mode);
   acc.output = memory[output]
-  // console.log(memory[output]);
   return index + 2;
 };
 
