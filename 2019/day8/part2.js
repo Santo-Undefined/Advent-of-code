@@ -1,11 +1,7 @@
 const makeFrame = ([width, height]) => {
   const frame = [];
   for (let index = 0; index < height; index++) {
-    const line = [];
-    for (let index = 0; index < width; index++) {
-      line.push(" ");
-    }
-    frame.push(line);
+    frame.push(" ".repeat(width).split(""));
   }
   return frame;
 };
@@ -16,8 +12,8 @@ const mapToFrame = (frame, layer) => {
   const pixels = {
     0: "□",
     1: "■",
-    2: " ",
   };
+
   for (let height = 0; height < frame.length; height++) {
     for (let width = 0; width < frame[height].length; width++) {
       const digit = layer[height][width];
