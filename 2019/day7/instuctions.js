@@ -63,5 +63,4 @@ export const actions = {
   "06": jmpIfFalse,
   "07": lessThan,
   "08": equalTo,
-  // "99": ()=> "Halted"
 }

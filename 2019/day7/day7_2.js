@@ -2,48 +2,19 @@ import { permutations } from "jsr:@std/collections";
 import { ampMemory } from "./input_data.js";
 import { actions } from "./instuctions.js";
 
-const dbg = (x) => {
-  console.log(x);
-  return x;
-};
-
 const parseInstruction = (instruction) => {
   const [parm3Mode, parm2Mode, parm1Mode, ...opcode] = instruction.toString()
     .padStart(5, "0").split("");
   return { parm3Mode, parm2Mode, parm1Mode, opCode: opcode.join("") };
 };
 
-// const runComputer = (data) => {
-//   const [input, lastOutput] = data.input
-//   const acc = { input: [input, lastOutput], inputIndex: 0, output: 0 }; // this has to kept in memory
-//   while (data.pointer < data.memory.length && data.memory[data.pointer] !== 99) {
-
-//     const instruction = parseInstruction(data.memory[data.pointer]);
-
-//     data.pointer = actions[instruction.opCode](data.memory, data.pointer, instruction, acc);
-
-//   if (data.memory[data.pointer] === 4) {
-//     console.log("output data")
-//     dbg(data.pointer)
-//     data.pointer = data.pointer + 1;
-//     dbg(data.pointer)
-
-//     break;
-//   }
-//   }
-//   if (data.memory[data.pointer] === 99) console.log(data.memory.length, data.pointer, "Halted");
-//   return {output: acc.output, pointer : data.pointer};
-// };
-
 const runComputer = (amp) => {
-  // dbg(amp)
-  // prompt()
   const memory = amp.memory;
   let pointer = amp.pointer;
 
-  const acc = {input: amp.input, output: amp.output};
+  const acc = { input: amp.input, output: amp.output };
 
-  while(pointer < memory.length && !amp.isHalted) {
+  while (pointer < memory.length && !amp.isHalted) {
     const instruction = parseInstruction(memory[pointer]);
 
     if (instruction.opCode === "99") {
@@ -52,15 +23,19 @@ const runComputer = (amp) => {
       return amp;
     }
     if (instruction.opCode === "04") {
-      amp.pointer = actions[instruction.opCode](memory, pointer, instruction, acc);
+      amp.pointer = actions[instruction.opCode](
+        memory,
+        pointer,
+        instruction,
+        acc,
+      );
       amp.output = acc.output;
       amp.memory = memory;
       return amp;
     }
-    pointer = actions[instruction.opCode](memory, pointer, instruction, acc)
+    pointer = actions[instruction.opCode](memory, pointer, instruction, acc);
   }
-
-}
+};
 
 const makeAmpsRecords = (RAM, memory) => {
   const ampsRecord = [];
@@ -78,16 +53,16 @@ const makeAmpsRecords = (RAM, memory) => {
 
 const runAmpCode = (RAM, memory) => {
   const ampsRecord = makeAmpsRecords(RAM, memory);
-  let index = ampsRecord.length;
+  let ampIndex = ampsRecord.length;
   let lastOutput = 0;
   const lastAmp = ampsRecord[ampsRecord.length - 1];
 
   while (!lastAmp.isHalted) {
-    const amp = ampsRecord[index % ampsRecord.length];
+    const amp = ampsRecord[ampIndex % ampsRecord.length];
     amp.input.unshift(lastOutput);
     runComputer(amp);
     lastOutput = amp.output;
-    index++;
+    ampIndex++;
   }
   return lastOutput;
 };
