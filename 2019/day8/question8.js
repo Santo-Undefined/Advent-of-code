@@ -1,19 +1,6 @@
-import { input, simpleImage } from "./data.js";
-
-const findDigitFrequency = (layer) =>
-  layer.reduce((res, digit) => {
-    res[digit] = res[digit] ? res[digit] + 1 : 1;
-    return res;
-  }, {});
-
-const combineLayerElements = (layeredImage) =>
-  layeredImage.map((x) => x.flatMap((x) => x));
-
-const findDigitFrequencyPerLayer = (layeredImage) => {
-  const combinedLayerElements = combineLayerElements(layeredImage);
-  const layerDigitFrequency = combinedLayerElements.map(findDigitFrequency);
-  return layerDigitFrequency;
-};
+import { input, pixelated, simpleImage } from "./data.js";
+import { part1 } from "./part1.js";
+import { part2 } from "./part2.js";
 
 const makeLayers = (splittedImage, [width, height]) => {
   const imageCopy = splittedImage.slice();
@@ -28,22 +15,14 @@ const makeLayers = (splittedImage, [width, height]) => {
   return layeredImage;
 };
 
-const part1 = (layerDigitFrequency) => {
-  const fewest0layer = layerDigitFrequency.reduce((res, x) => {
-    return x["0"] < res["0"] ? x : res;
-  });
-  const countOf1s = fewest0layer["1"];
-  const countOf2s = fewest0layer["2"];
-  return countOf1s * countOf2s;
-};
-
 const main = (encodedImage, dimensions) => {
   const splittedImage = encodedImage.split("");
   const layeredImage = makeLayers(splittedImage, dimensions);
-  const layerDigitFrequency = findDigitFrequencyPerLayer(layeredImage);
 
-  console.log(part1(layerDigitFrequency));
+  console.log("Part one", part1(layeredImage));
+  console.log("Part 2\n", part2(layeredImage, dimensions));
 };
 
+// main(pixelated, [2, 2]);
 // main(simpleImage, [3, 2]);
 main(input, [25, 6]);
