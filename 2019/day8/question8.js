@@ -16,10 +16,8 @@ const makeLayers = (splittedImage, [width, height]) => {
 };
 
 const main = (encodedImage, dimensions) => {
-  const splittedImage = encodedImage.split("");
-  const layeredImage = makeLayers(splittedImage, dimensions);
-
-  console.log("Part one", part1(layeredImage));
+  const layeredImage = makeLayers(encodedImage.split(""), dimensions);
+  console.log("Part 1", part1(layeredImage));
   console.log("Part 2\n", part2(layeredImage, dimensions));
 };
 
