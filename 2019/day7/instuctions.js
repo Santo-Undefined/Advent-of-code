@@ -22,8 +22,7 @@ const mul = (memory, index, instruction) => {
 
 const ip = (memory, index, instruction, acc) => {
   const [writeAddress] = getDataIndices(memory, index, instruction, 0);
-  memory[writeAddress] = acc.input[acc.inputIndex];
-  acc.inputIndex = acc.inputIndex + 1;
+  memory[writeAddress] = acc.input.pop();
   return index + 2;
 };
 
@@ -64,4 +63,5 @@ export const actions = {
   "06": jmpIfFalse,
   "07": lessThan,
   "08": equalTo,
+  // "99": ()=> "Halted"
 }
