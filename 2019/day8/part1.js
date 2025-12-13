@@ -13,8 +13,8 @@ const findDigitFrequencyPerLayer = (layeredImage) => {
   return layerDigitFrequency;
 };
 
-export const part1 = (layeredImage) => {
-  const layerDigitFrequency = findDigitFrequencyPerLayer(layeredImage);
+export const part1 = (imageLayers) => {
+  const layerDigitFrequency = findDigitFrequencyPerLayer(imageLayers);
   const fewest0layer = layerDigitFrequency.reduce((res, x) => {
     return x["0"] < res["0"] ? x : res;
   });
@@ -22,3 +22,9 @@ export const part1 = (layeredImage) => {
   const countOf2s = fewest0layer["2"];
   return countOf1s * countOf2s;
 };
+
+
+/* 
+combine layers is creating intermediate arrays 
+It is inefficient and needs to be changed
+*/
