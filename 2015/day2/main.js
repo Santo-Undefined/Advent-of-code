@@ -8,16 +8,6 @@ const calcPaperNeeded = (dimension) => {
   return smallestSide + (2 * sides.reduce((res, x) => res + x));
 };
 
-// const calcWappingPaper = (input) => {
-//   const dimensions = input.match(/\d+x\d+x\d+/g);
-//   let paper = 0;
-//   for (const dimension of dimensions) {
-//     const values = dimension.split("x").map((x) => parseInt(x));
-//     paper += calcPaperNeeded(values);
-//   }
-//   console.log("Final", paper);
-// };
-
 const calcRibbon = (dimension) => {
   dimension.push(dimension[0]);
   const perimeter = [];
@@ -27,16 +17,6 @@ const calcRibbon = (dimension) => {
   const smallestPerimeter = Math.min(...perimeter);
   return smallestPerimeter + (dimension[0] * dimension[1] * dimension[2]);
 };
-
-// const ribbonNeeded = (input) => {
-//   const dimensions = input.match(/\d+x\d+x\d+/g);
-//   let ribbon = 0;
-//   for (const dimension of dimensions) {
-//     const values = dimension.split("x").map((x) => parseInt(x));
-//     ribbon += calcRibbon(values);
-//   }
-//   console.log("Final", ribbon);
-// };
 
 const calcMaterial = (input, material) => {
   const dimensions = input.match(/\d+x\d+x\d+/g);
@@ -61,3 +41,5 @@ const calcMaterial = (input, material) => {
 
 calcMaterial("1x1x10", calcPaperNeeded)
 calcMaterial("1x1x10", calcRibbon)
+calcMaterial(Deno.readTextFileSync("./input.txt"), calcPaperNeeded)
+calcMaterial(Deno.readTextFileSync("./input.txt"), calcRibbon)
